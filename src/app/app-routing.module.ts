@@ -4,8 +4,11 @@ import { CustomerSupportComponent } from './customer-support/customer-support.co
 import { DemoComponent } from './demo/demo.component';
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './login/login.component';
 
-const routes: Routes = [ { path: '', pathMatch: 'full', redirectTo: 'home' },
+const routes: Routes = [
+{ path: '', pathMatch: 'full', redirectTo: 'home' },
+{ path: 'login', component: LoginComponent },
 { path: 'home', component: HomeComponent },
 { path: 'demo', component: DemoComponent  },
 { path: 'demo/chat-with-support-bot', component: CustomerSupportComponent  }]
@@ -21,5 +24,6 @@ export const routedComponents = [
   HeaderComponent,
   HomeComponent  ,
   DemoComponent,
-  HeaderComponent
+  HeaderComponent,
+  LoginComponent
 ]

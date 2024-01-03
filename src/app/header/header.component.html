@@ -1,9 +1,9 @@
- 
+
     <!-- <div class="b-example-divider"></div> -->
   <header class="p-3 mb-3 border-bottom">
     <div class="container-1">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start ">
-        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+        <a  class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
           <img src="../../assets/lsc-logo-png-new-3.png" width="48" height="38" alt="LSC">
         </a>
 
@@ -19,11 +19,12 @@
 
         <div class="dropdown text-end">
           <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="../../assets/lsc-logo-png.png" alt="mdo" width="32" height="32" class="rounded-circle">                
+            <img src="../../assets/lsc-logo-png.png" alt="mdo" width="32" height="32" class="rounded-circle">
           </a>
           <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-            <li><a class="dropdown-item" >Login</a></li>
-            
+            <!-- <a *ngIf="!isLoggedIn" class="dropdown-item" (click)="login()">Login</a> -->
+            <a  class="dropdown-item" (click)="logout()">Sair</a>
+
           </ul>
         </div>
       </div>

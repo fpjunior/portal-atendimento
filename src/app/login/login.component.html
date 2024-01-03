@@ -1,0 +1,18 @@
+<div class="container">
+  <h2>Login</h2>
+  <form>
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" class="form-control" id="username" [(ngModel)]="username" name="username" required>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" [(ngModel)]="password" name="password" required>
+    </div>
+    <div class="mb-3">
+      <label for="admin" class="form-label">Código Admin</label>
+      <input type="password" class="form-control" id="admin" [(ngModel)]="codeAdmin" name="admin" required>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="login()">Login</button>
+  </form>
+</div>

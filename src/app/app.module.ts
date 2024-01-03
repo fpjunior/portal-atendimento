@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { routedComponents, AppRoutingModule } from './app-routing.module';
 import { CustomerSupportComponent } from './customer-support/customer-support.component';
+import { LoginComponent } from './login/login.component';
 
 
 
@@ -14,15 +15,16 @@ import { CustomerSupportComponent } from './customer-support/customer-support.co
   declarations: [
     AppComponent,
     routedComponents,
-    CustomerSupportComponent
-    
+    CustomerSupportComponent,
+    // LoginComponent
+
   ],
   imports: [
     BrowserModule,
     FormsModule,
     CommonModule,
     AppRoutingModule,
-    BrowserAnimationsModule    
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
