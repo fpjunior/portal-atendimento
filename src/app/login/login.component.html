@@ -1,18 +1,19 @@
-<div class="container">
-  <h2>Login</h2>
-  <form>
-    <div class="mb-3">
-      <label for="username" class="form-label">Username</label>
-      <input type="text" class="form-control" id="username" [(ngModel)]="username" name="username" required>
-    </div>
-    <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
-      <input type="password" class="form-control" id="password" [(ngModel)]="password" name="password" required>
-    </div>
-    <div class="mb-3">
-      <label for="admin" class="form-label">Código Admin</label>
-      <input type="password" class="form-control" id="admin" [(ngModel)]="codeAdmin" name="admin" required>
-    </div>
-    <button type="button" class="btn btn-primary" (click)="login()">Login</button>
-  </form>
+<div class="center-container">
+  <!-- <mat-card> -->
+      <!-- <mat-card-content> -->
+          <form class="form-container" [formGroup]="loginForm" (ngSubmit)="submitLoginForm()">
+                  <h1>Login</h1>
+                      <label>Email</label>
+                      <input matInput formControlName="email" type="email" required [disabled]="isLoading"/>
+
+                      <label>Password</label>
+                      <input matInput formControlName="password" type="password" required [disabled]="isLoading"/>
+
+                      <div *ngIf="emailPassInvalid">
+                          <span>Incorrect email or password</span>
+                      </div>
+
+                  <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">Login</button>
+                  <a>Don't have an account?<a mat-button routerLink="/register">Register</a></a>
+          </form>
 </div>

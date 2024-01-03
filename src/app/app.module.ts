@@ -4,18 +4,23 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { routedComponents, AppRoutingModule } from './app-routing.module';
 import { CustomerSupportComponent } from './customer-support/customer-support.component';
 import { LoginComponent } from './login/login.component';
+// import { getFirestore, provideFirestore } from 'firebase/firestore';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { initializeApp } from 'firebase/app';
+import { environment } from 'src/environments/environment';
 
-
+const app = initializeApp(environment.firebase);
 
 @NgModule({
   declarations: [
     AppComponent,
     routedComponents,
     CustomerSupportComponent,
+    LoginComponent,
     // LoginComponent
 
   ],
@@ -24,7 +29,9 @@ import { LoginComponent } from './login/login.component';
     FormsModule,
     CommonModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
+    provideFirestore(() => getFirestore()),
   ],
   providers: [],
   bootstrap: [AppComponent]
