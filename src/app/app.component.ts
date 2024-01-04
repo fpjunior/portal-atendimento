@@ -2,6 +2,11 @@ import { Component } from '@angular/core';
 import { AuthService } from './services/auth/auth.service';
 import { Router } from '@angular/router';
 
+const config = {
+  apiKey: 'AIzaSyAULJTS4sToIBUzTd55xHTCpGJ3L-jCcog',
+  databaseURL: 'https://angularchat-68855-default-rtdb.firebaseio.com'
+};
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -14,7 +19,9 @@ export class AppComponent {
   constructor(
     public auth: AuthService,
     private router: Router
-    ) { }
+    ) {
+      // firebase.initializeApp(config);
+    }
 
   public isLoggedIn(): boolean {
     return this.auth.isAuthenticated;

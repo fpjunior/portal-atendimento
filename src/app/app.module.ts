@@ -33,8 +33,18 @@ import { RouterModule } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import {MatTabsModule} from '@angular/material/tabs';
 
-const app = initializeApp(environment.firebase);
 
+const config = {
+  apiKey: "AIzaSyAULJTS4sToIBUzTd55xHTCpGJ3L-jCcog",
+  authDomain: "angularchat-68855.firebaseapp.com",
+  databaseURL: "https://angularchat-68855-default-rtdb.firebaseio.com",
+  projectId: "angularchat-68855",
+  storageBucket: "angularchat-68855.appspot.com",
+  messagingSenderId: "177451814229",
+  appId: "1:177451814229:web:3b04f9d7d45d807f5873dc"
+};
+
+const app = initializeApp(config);
 // Initialize Firebase
 
 // Initialize Firebase Authentication and get a reference to the service
