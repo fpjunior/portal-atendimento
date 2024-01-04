@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { CustomerSupportComponent } from './customer-support/customer-support.component';
@@ -32,6 +32,8 @@ import { getAuth } from 'firebase/auth';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import {MatTabsModule} from '@angular/material/tabs';
+import { ChatroomComponent } from './pages/chatroom/chatroom.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 
 const config = {
@@ -57,7 +59,8 @@ const auth = getAuth(app);
     LoginPageComponent,
     NotfoundPageComponent,
     RegisterPageComponent,
-    HeaderComponent
+    HeaderComponent,
+    ChatroomComponent
   ],
   imports: [
     RouterModule,
@@ -79,9 +82,10 @@ const auth = getAuth(app);
     MatProgressBarModule,
     MatListModule,
     MatTabsModule,
+    MatSidenavModule,
     provideFirestore(() => getFirestore()),
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
