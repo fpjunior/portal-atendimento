@@ -1,8 +1,8 @@
 <div class="mat-app-background">
   <mat-toolbar color="primary">
-      <button *ngIf="isLoggedIn()" mat-icon-button (click)="toggleMenu()" aria-label="Menu">
-          <mat-icon>menu</mat-icon>
-      </button>
+      <!-- <button *ngIf="isLoggedIn()" mat-icon-button (click)="toggleMenu()" aria-label="Menu"> -->
+          <!-- <mat-icon>menu</mat-icon> -->
+      <!-- </button> -->
       <span>{{ toolbarTitle }}</span>
       <span class="spacer"></span>
       <button *ngIf="isLoggedIn()" mat-icon-button [matMenuTriggerFor]="accountMenu" aria-label="Account Settings">
@@ -11,7 +11,7 @@
       <mat-menu #accountMenu="matMenu">
           <button mat-menu-item (click)="logout()">
             <mat-icon>exit_to_app</mat-icon>
-            <span>Logout</span>
+            <span>Sair</span>
           </button>
       </mat-menu>
   </mat-toolbar>
