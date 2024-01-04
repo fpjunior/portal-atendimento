@@ -5,9 +5,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { routedComponents, AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import { CustomerSupportComponent } from './customer-support/customer-support.component';
-import { LoginComponent } from './login/login.component';
 // import { getFirestore, provideFirestore } from 'firebase/firestore';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { initializeApp } from 'firebase/app';
@@ -26,18 +25,32 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 
 import { MatListModule } from '@angular/material/list';
+import { NotfoundPageComponent } from './pages/notfound-page/notfound-page.component';
+import { LoginPageComponent } from './pages/login-page/login-page.component';
+import { RegisterPageComponent } from './pages/register-page/register-page.component';
+import { getAuth } from 'firebase/auth';
+import { RouterModule } from '@angular/router';
+import { HeaderComponent } from './header/header.component';
+import {MatTabsModule} from '@angular/material/tabs';
+
 const app = initializeApp(environment.firebase);
+
+// Initialize Firebase
+
+// Initialize Firebase Authentication and get a reference to the service
+const auth = getAuth(app);
 
 @NgModule({
   declarations: [
     AppComponent,
-    routedComponents,
     CustomerSupportComponent,
-    LoginComponent,
-    // LoginComponent
-
+    LoginPageComponent,
+    NotfoundPageComponent,
+    RegisterPageComponent,
+    HeaderComponent
   ],
   imports: [
+    RouterModule,
     BrowserModule,
     FormsModule,
     CommonModule,
@@ -55,6 +68,7 @@ const app = initializeApp(environment.firebase);
     MatStepperModule,
     MatProgressBarModule,
     MatListModule,
+    MatTabsModule,
     provideFirestore(() => getFirestore()),
   ],
   providers: [],
