@@ -1,23 +1,38 @@
-import { Component, OnInit } from '@angular/core';
-import { Configuration, OpenAIApi } from "openai";
+import { Component } from '@angular/core';
+import { AuthService } from './services/auth/auth.service';
+import { Router } from '@angular/router';
 
-@Component({ selector: 'app-root', templateUrl: './app.component.html', styleUrls: ['./app.component.css'] })
-export class AppComponent implements OnInit {
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent {
+  title = 'Portal';
+  toolbarTitle = 'Portal de Atendimento';
 
-  response: any;
-  isLoggedIn: boolean = true;
+  constructor(
+    public auth: AuthService,
+    private router: Router
+    ) { }
 
-  title = 'chatGPTWithAngular';
-  ngOnInit(): void {
-    //this.tryCall();
+  public isLoggedIn(): boolean {
+    return this.auth.isAuthenticated;
   }
 
-  updateLoginStatus(isLoggedIn: boolean): void {
-    this.isLoggedIn = isLoggedIn;
+  logout(): void {
+    this.auth.logout()
+      .then(() => {
+        // handle successful logout, e.g., navigate to the login page
+        this.router.navigate(['/login']);
+      })
+      .catch((error) => {
+        // handle error during logout
+        console.error('Error during logout:', error);
+      });
   }
 
-
-
-
+  toggleMenu() {
+    // Implement your menu toggle logic here
+  }
 }
-

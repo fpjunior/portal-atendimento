@@ -1,29 +1,26 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CustomerSupportComponent } from './customer-support/customer-support.component';
-import { DemoComponent } from './demo/demo.component';
-import { HeaderComponent } from './header/header.component';
+
+
+// Import the AuthGuard
+import { AuthGuard } from './guards/auth/auth.guard';
 import { HomeComponent } from './home/home.component';
-import { LoginComponent } from './login/login.component';
+import { NotfoundPageComponent } from './pages/notfound-page/notfound-page.component';
+import { LoginPageComponent } from './pages/login-page/login-page.component';
+import { HeaderComponent } from './header/header.component';
+import { CustomerSupportComponent } from './customer-support/customer-support.component';
 
 const routes: Routes = [
-{ path: '', pathMatch: 'full', redirectTo: 'home' },
-{ path: 'login', component: LoginComponent },
-{ path: 'home', component: HomeComponent },
-{ path: 'demo', component: DemoComponent  },
-{ path: 'demo/chat-with-support-bot', component: CustomerSupportComponent  }]
-;
+  { path: 'home', component: HomeComponent,canActivate: [AuthGuard],},
+  { path: 'login', component: LoginPageComponent },
+  { path: 'header', component: HeaderComponent },
+  { path: 'header/chat-with-support-bot', component: CustomerSupportComponent },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '**', component: NotfoundPageComponent }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
-
-export const routedComponents = [
-  HeaderComponent,
-  HomeComponent  ,
-  DemoComponent,
-  HeaderComponent,
-  LoginComponent
-]

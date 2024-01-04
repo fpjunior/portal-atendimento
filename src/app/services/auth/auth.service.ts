@@ -5,6 +5,9 @@ import { BehaviorSubject } from 'rxjs'; // Import BehaviorSubject
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 
+
+
+
 @Injectable({
   providedIn: 'root',
 })
@@ -17,7 +20,7 @@ export class AuthService {
 
   constructor() {
     // Listen for auth state changes
-    onAuthStateChanged(this.auth, (user: any) => {
+    onAuthStateChanged(this.auth, (user) => {
       if (user) {
         // User is signed in
         this.authState.next(true);
@@ -31,12 +34,12 @@ export class AuthService {
   // Login with email and password
   login(email: string, password: string): Promise<User> {
     return signInWithEmailAndPassword(this.auth, email, password)
-      .then((userCredential: any) => {
+      .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
         return user;
       })
-      .catch((error: any) => {
+      .catch((error) => {
         // Handle error
         console.error('Error during login:', error);
         throw error;
@@ -49,7 +52,7 @@ export class AuthService {
       .then(() => {
         // Sign-out successful.
       })
-      .catch((error: any) => {
+      .catch((error) => {
         // An error happened.
         console.error('Error during logout:', error);
         throw error;
@@ -64,7 +67,7 @@ export class AuthService {
   // Create a new user with email and password
   createUser(email: string, password: string, name: string): Promise<User> {
     return createUserWithEmailAndPassword(this.auth, email, password)
-      .then((userCredential: any) => {
+      .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
 
@@ -73,7 +76,7 @@ export class AuthService {
 
         return user;
       })
-      .catch((error: any) => {
+      .catch((error) => {
         // Handle error
         console.error('Error during user creation:', error);
         throw error;
