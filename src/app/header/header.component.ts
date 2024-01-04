@@ -21,18 +21,18 @@ export class HeaderComponent implements OnInit {
 
   login(): void {
     this.isLoggedIn = true;
-    this.appComponent.updateLoginStatus(true);
+    // this.appComponent.updateLoginStatus(true);
   }
 
   // Método para simular o logout
   logout(): void {
     this.isLoggedIn = false;
     this.router.navigate(['/login']);
-    this.appComponent.updateLoginStatus(false);
+    // this.appComponent.updateLoginStatus(false);
   }
 
   checkLoginStatus(): void {
-    this.appComponent.updateLoginStatus(this.router.url !== '/login');
+    // this.appComponent.updateLoginStatus(this.router.url !== '/login');
   }
 
 
