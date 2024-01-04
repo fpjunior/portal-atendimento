@@ -1,0 +1,13 @@
+<div class="center-container">
+    <mat-card>
+        <mat-card-content>
+            <h1>Error: 404</h1>
+            <h2>Page not found: <strong>{{ attemptedUrl }}</strong></h2>
+            <p>The page you are looking for might have been removed or is temporarily unavailable.</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-button routerLink="/">HOME</button>
+            <button mat-button (click)="goBack()">BACK</button>
+        </mat-card-actions>
+    </mat-card>
+</div>
