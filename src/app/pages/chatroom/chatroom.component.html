@@ -25,7 +25,7 @@
               <div class="right-bubble" [ngClass]="{'right-bubble': chat.nickname === nickname, 'left-bubble': chat.nickname !== nickname}">
                 <span class="msg-name" *ngIf="chat.nickname === nickname">Eu</span>
                 <span class="msg-name" *ngIf="chat.nickname !== nickname">{{chat.nickname}}</span>
-                <span class="msg-date"> at {{chat.date | date:'short'}}</span>
+                <span class="msg-date"> as {{chat.date | date:'short'}}</span>
                 <p text-wrap>{{chat.message}}</p>
               </div>
             </div>

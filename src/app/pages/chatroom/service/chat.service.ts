@@ -21,6 +21,16 @@ export class ChatService {
     return this.http.get<any[]>(roomUsersUrl);
   }
 
+  updateUserStatus(userKey: string): Observable<any> {
+    const userUrl = `${URL_DEFAULT}/roomusers/${userKey}.json`; // Substitua pela URL correta
+    return this.http.patch(userUrl, { status: 'offline' });
+  }
+
+  getUsers(): Observable<any> {
+    const usersUrl = `${URL_DEFAULT}/roomusers.json`; // Substitua pela URL correta
+    return this.http.get(usersUrl);
+  }
+
   getChats(): Observable<any[]> {
     return this.http.get(`${URL_DEFAULT}/chats.json`)
       .pipe(

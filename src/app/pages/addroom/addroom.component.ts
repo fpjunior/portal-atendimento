@@ -5,6 +5,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DataSnapshot, child, equalTo, get, getDatabase, orderByChild, push, query, ref, set } from 'firebase/database';
 import { ChatService } from '../chatroom/service/chat.service';
+import { CommunicationService } from 'src/app/services/auth/comunication.service';
 // import * as firebase from 'firebase';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -33,7 +34,8 @@ export class AddroomComponent implements OnInit {
               private route: ActivatedRoute,
               private chatService: ChatService,
               private formBuilder: FormBuilder,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar,
+              private communicationService: CommunicationService) {
               }
 
   ngOnInit(): void {
@@ -43,8 +45,9 @@ export class AddroomComponent implements OnInit {
     });
   }
 
-  teste(event: any){
-    alert('chegou')
+  handleUserClick(user: any): void {
+    this.communicationService.emitUserClick(user);
+    this.communicationService.changeScrol();
   }
 
   getStatusClass(status: string): string {

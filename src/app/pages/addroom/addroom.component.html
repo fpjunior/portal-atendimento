@@ -20,10 +20,10 @@
 <div style="height: 795px;" class="example-container mat-elevation-z8">
   <mat-drawer mode="side" opened class="left-drawer">
     <div class="users-pane">
-      <mat-card (click)="teste(user)" class="users-card" *ngFor="let user of users">
+      <mat-card (click)="handleUserClick(user)" class="users-card" *ngFor="let user of users">
         <div style="display: flex;
         justify-content: space-between;
-        align-items: center;">
+        align-items: center; cursor: pointer;">
           <mat-icon>person</mat-icon>
           <span class="username">{{ user.nickname }}</span>
           <div class="status-indicator" [ngClass]="getStatusClass(user.status)"></div>

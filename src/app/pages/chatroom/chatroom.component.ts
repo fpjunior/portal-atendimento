@@ -8,6 +8,7 @@ import { equalTo, getDatabase, onValue, orderByChild, push, query, ref, set, upd
 import { ChatService } from './service/chat.service';
 import { Subscription } from 'rxjs';
 import { snapshotToArray } from 'src/app/util/functions-export';
+import { CommunicationService } from 'src/app/services/auth/comunication.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -40,11 +41,11 @@ export class ChatroomComponent implements OnInit, OnDestroy {
     private chatService: ChatService,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
+    private communicationService: CommunicationService,
     public datepipe: DatePipe) {
     this.nickname = localStorage.getItem('nickname') ?? '';
     const database = getDatabase();
     this.roomname = 'atendente-room';
-    this.listenToChats();
     this.getOnlineUsers()
   }
 
@@ -57,6 +58,10 @@ export class ChatroomComponent implements OnInit, OnDestroy {
         console.error('Error fetching online users:', error);
       }
     );
+  }
+
+  handleUserClick(user: any): void {
+     this.scrolltop = this.chatcontent.nativeElement.scrollHeight
   }
 
   private listenToChats() {
@@ -79,6 +84,7 @@ export class ChatroomComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.listenToChats();
     this.chatForm = this.formBuilder.group({
       'message': [null, Validators.required]
     });
@@ -97,6 +103,7 @@ export class ChatroomComponent implements OnInit, OnDestroy {
     this.chatService.sendMessage(chat).subscribe(
       (response) => {
         console.log('Mensagem enviada com sucesso:', response);
+        this.listenToChats()
       },
       (error) => {
         console.error('Erro ao enviar mensagem:', error);
@@ -113,25 +120,42 @@ export class ChatroomComponent implements OnInit, OnDestroy {
     chat.roomname = this.roomname;
     chat.nickname = this.nickname;
     chat.date = this.datepipe.transform(new Date(), 'dd/MM/yyyy HH:mm:ss') ?? '';
-    chat.message = `${this.nickname} leave the room`;
+    chat.message = `${this.nickname} deixou a sala`;
     chat.type = 'exit';
+
+    this.chatService.sendMessage(chat).subscribe(
+      (response) => {
+        console.log('Mensagem enviada com sucesso:', response);
+      },
+      (error) => {
+        console.error('Erro ao enviar mensagem:', error);
+      }
+    );
+
+    this.chatForm = this.formBuilder.group({
+      'message': [null, Validators.required]
+    });
+
+    // const newMessageRef = push(ref(database, 'chats/'));
     const database = getDatabase();
-    const newMessageRef = push(ref(database, 'chats/'));
-    set(newMessageRef, chat);
+    // set(newMessageRef, chat);
     const roomUsersRef = ref(database, 'roomusers/');
     const userQuery = query(roomUsersRef, orderByChild('roomname'), equalTo(this.roomname));
 
-    onValue(userQuery, (snapshot) => {
-      const roomuser = snapshotToArray(snapshot);
-      const user = roomuser.find((x: any) => x.nickname === this.nickname);
+    this.chatService.getUsers().subscribe((roomUsers) => {
+
+      const userArray = snapshotToArray(roomUsers);
+      const user = userArray.find((x: any) => x.nickname === this.nickname);
 
       if (user !== undefined) {
-        const userRef = ref(database, 'roomusers/' + user.key);
-        update(userRef, { status: 'offline' });
+        // Chame o método updateUserStatus() para atualizar o status do usuário para offline
+        this.chatService.updateUserStatus(user.key).subscribe(() => {
+          console.log('Status do usuário atualizado para offline.');
+          this.router.navigate(['/login']);
+        });
       }
     });
 
-    this.router.navigate(['/roomlist']);
   }
 
 }

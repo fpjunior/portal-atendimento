@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponent } from '../app.component';
 import { DatePipe } from '@angular/common';
 import { getDatabase, ref, push, set, query, orderByChild, equalTo, onValue } from 'firebase/database';
 import { snapshotToArray } from '../util/functions-export';
 import { ChatService } from '../pages/chatroom/service/chat.service';
+import { CommunicationService } from '../services/auth/comunication.service';
+import { MatTabGroup } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-header',
@@ -20,15 +22,25 @@ export class HeaderComponent implements OnInit {
   rooms = [];
   isLoadingResults = true;
   users: any = [];
+  @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
 
   constructor(
     private router: Router,
     private chatService: ChatService,
-    public datepipe: DatePipe ) {}
+    public datepipe: DatePipe,
+    private communicationService: CommunicationService ) {
+      communicationService.userClicked.subscribe((user: any) => {
+        this.ativarChatRoomTab()
+      });
+    }
 
   ngOnInit(): void {
     this.checkLoginStatus();
     this.getOnlineUsers();
+  }
+
+  ativarChatRoomTab(): void {
+    this.tabGroup.selectedIndex = 1; // Índice 1 corresponde ao segundo tab (índices começam em 0)
   }
 
   private getOnlineUsers() {

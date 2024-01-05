@@ -3,9 +3,9 @@
     <div class="d-flex align-items-center justify-content-between">
       <!-- Menu de Navegação -->
 
-      <mat-tab-group>
+      <mat-tab-group #tabGroup>
         <mat-tab label="Início"> <app-addroom></app-addroom></mat-tab>
-        <mat-tab label="Chat Room" (Click)="teste()">
+        <mat-tab label="Chat Room">
           <div style="height: 780px;">
             <app-chatroom></app-chatroom>
           </div>
