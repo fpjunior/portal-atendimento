@@ -26,7 +26,7 @@ Este repositório é uma prova de conceito (POC) desenvolvida em Angular 2+, uti
 
 3. No arquivo `src/environments/environment.ts`, substitua as configurações do Firebase pelos dados do seu projeto Firebase.
 
-### Configurar o Chat GPT
+### Configurar o Chat GPT, realize a etapa abaixo apenas se tiver problema ao utilizar o Chat AI GPT ou problemas ao fazer login
 
 1. Obtenha uma chave API no [Chat do OpenAI](https://platform.openai.com/api-keys).
 
