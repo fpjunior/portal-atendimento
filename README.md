@@ -12,7 +12,10 @@ Este repositório é uma prova de conceito (POC) desenvolvida em Angular 2+, uti
 2. **Navegue até o diretório do projeto:**
    - `cd seu-repositorio`
 
-3. **Instale as dependências:**
+3. **Faça checkout para a branch `develop`:**
+   - `git checkout develop`
+
+4. **Instale as dependências:**
    - `npm install`
 
 ### Configurar o Firebase
@@ -28,6 +31,22 @@ Este repositório é uma prova de conceito (POC) desenvolvida em Angular 2+, uti
 1. Obtenha uma chave API no [Chat do OpenAI](https://platform.openai.com/api-keys).
 
 2. Substitua a chave no arquivo `src/environments/environment.ts`.
+   - Deve ficar assim:
+   ```typescript
+   export const environment = {
+     env_name: 'dev',
+     production: false,
+     firebase: {
+       apiKey: "CHAVE API KEY",
+       authDomain: "project-nome-codigo.firebaseapp.com",
+       projectId: "project-nome-codigo",
+       storageBucket: "project-nome-codigo.appspot.com",
+       messagingSenderId: "codigo-id",
+       appId: "app-ID",
+       measurementId: "G-codigo-id"
+     },
+     apiKeyGpt: 'API-KEY-GPT',
+   };
 
 ## Executar o Projeto
 
