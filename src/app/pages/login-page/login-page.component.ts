@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // Import FormBuilder, FormGroup, and Validators
 import { AuthService } from '../../services/auth/auth.service'; // Import AuthService
 import { Router } from '@angular/router';
+import { ChatService } from './service/login.service';
 
 
 @Component({
@@ -19,13 +20,31 @@ export class LoginPageComponent {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private chatService: ChatService
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
   } // End of constructor()
+
+  onFormSubmit(form: any): void {
+    this.chatService.login(form).subscribe(
+      (response: any) => {
+        if (response.success) {
+          this.router.navigate(['/header']);
+        } else {
+          // Lógica de tratamento adicional, se necessário
+        }
+      },
+      (error) => {
+        // Lógica de tratamento de erro, se necessário
+      }
+    );
+  }
+
+  // Adicione outras funções do componente conforme necessário
 
 
   // Method to submit the login form
@@ -38,7 +57,7 @@ export class LoginPageComponent {
       // Get the email and password from the login form
       const email = this.loginForm.get('email')?.value;
       const password = this.loginForm.get('password')?.value;
-
+       localStorage.setItem('nickname', email.split('@')[0])
       // Call the login method from AuthService
       this.authService.login(email, password)
         .then((user) => {
@@ -50,7 +69,7 @@ export class LoginPageComponent {
           this.isLoading = false;
 
           // Navigate to a different page or show a success message
-          this.router.navigate(['/home']); // Replace '/dashboard' with the desired route
+          // this.router.navigate(['/home']); // Replace '/dashboard' with the desired route
           this.router.navigate(['/header']); // Replace '/dashboard' with the desired route
 
         })

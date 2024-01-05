@@ -4,14 +4,17 @@
       <!-- Menu de Navegação -->
 
       <mat-tab-group>
-        <mat-tab label="Início"> Página Inicial </mat-tab>
-        <mat-tab label="Chat Room"> tt </mat-tab>
+        <mat-tab label="Início">  </mat-tab>
+        <mat-tab label="Chat Room" (Click)="teste()">
+          <div style="height: 780px;">
+            <app-chatroom></app-chatroom>
+          </div>
+        </mat-tab>
         <mat-tab label="Chat AI"> <app-customer-support></app-customer-support> </mat-tab>
       </mat-tab-group>
-      <button mat-raised-button color="primary" type="submit" >Login</button>
-      <a>Don't have an account?<a mat-button routerLink="/header/chat">Register</a></a>
+      <!-- <button mat-raised-button color="primary" (click)="enterChatRoom('atendente-room')" >Login</button> -->
+      <!-- <a>Don't have an account?<a mat-button routerLink="/header/chatroom/atendente-room">Register</a></a> -->
     </div>
   </div>
   <!-- <app-chatroom></app-chatroom> -->
 </header>
-

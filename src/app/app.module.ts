@@ -34,7 +34,9 @@ import { HeaderComponent } from './header/header.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import { ChatroomComponent } from './pages/chatroom/chatroom.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
-
+import { AddroomComponent } from './pages/addroom/addroom.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { HttpClientModule } from '@angular/common/http';
 
 const config = {
   apiKey: "AIzaSyAULJTS4sToIBUzTd55xHTCpGJ3L-jCcog",
@@ -60,7 +62,8 @@ const auth = getAuth(app);
     NotfoundPageComponent,
     RegisterPageComponent,
     HeaderComponent,
-    ChatroomComponent
+    ChatroomComponent,
+    AddroomComponent
   ],
   imports: [
     RouterModule,
@@ -83,6 +86,8 @@ const auth = getAuth(app);
     MatListModule,
     MatTabsModule,
     MatSidenavModule,
+    MatSnackBarModule,
+    HttpClientModule,
     provideFirestore(() => getFirestore()),
   ],
   providers: [DatePipe],

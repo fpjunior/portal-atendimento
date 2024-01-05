@@ -11,6 +11,7 @@ import { HeaderComponent } from './header/header.component';
 import { CustomerSupportComponent } from './customer-support/customer-support.component';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import { ChatroomComponent } from './pages/chatroom/chatroom.component';
+import { AddroomComponent } from './pages/addroom/addroom.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent,canActivate: [AuthGuard],},
@@ -18,7 +19,8 @@ const routes: Routes = [
   { path: 'header', component: HeaderComponent },
   { path: 'register', component: RegisterPageComponent },
   { path: 'header/chat', component: ChatroomComponent },
-
+  { path: 'addroom', component: AddroomComponent },
+  { path: 'header/chatroom/:roomname', component: ChatroomComponent },
   { path: 'header/chat-with-support-bot', component: CustomerSupportComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotfoundPageComponent }
