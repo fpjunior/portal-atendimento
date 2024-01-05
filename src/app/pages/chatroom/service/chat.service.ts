@@ -15,7 +15,7 @@ export class ChatService {
     return this.http.post(`${URL_DEFAULT}/chats.json`, chat);
   }
 
-  getOnlineUsers(): Observable<any[]> {
+  public getOnlineUsers(): Observable<any[]> {
     const roomUsersUrl = `${URL_DEFAULT}/roomusers.json`;
 
     return this.http.get<any[]>(roomUsersUrl);

@@ -8,6 +8,7 @@
       <button *ngIf="isLoggedIn()" mat-icon-button [matMenuTriggerFor]="accountMenu" aria-label="Account Settings">
           <mat-icon>account_circle</mat-icon>
       </button>
+      <span>{{userLogged}}</span>
       <mat-menu #accountMenu="matMenu">
           <button mat-menu-item (click)="logout()">
             <mat-icon>exit_to_app</mat-icon>

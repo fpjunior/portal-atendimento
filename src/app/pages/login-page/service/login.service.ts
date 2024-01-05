@@ -6,7 +6,7 @@ import { URL_DEFAULT } from 'src/app/util/constant-url';
 @Injectable({
   providedIn: 'root',
 })
-export class ChatService {
+export class LoginService {
 
   constructor(private http: HttpClient) {}
 

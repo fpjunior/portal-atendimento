@@ -16,13 +16,14 @@ response!: ResponseModel | undefined;
     promptText = '';
     showSpinner = false;
 
-  constructor() { }
+  constructor() {
+   }
 
   ngOnInit(): void {
   }
 
   checkResponse() {
-    this.pushChatContent(this.promptText,'You','person');
+    this.pushChatContent(this.promptText,'Você','person');
     this.invokeGPT();
   }
 
@@ -58,7 +59,7 @@ response!: ResponseModel | undefined;
       let apiResponse =  await openai.createCompletion(requestData);
 
       this.response = apiResponse.data as ResponseModel;
-      this.pushChatContent(this.response.choices[0].text.trim(),'Mr Bot','bot');
+      this.pushChatContent(this.response.choices[0].text.trim(),'Chat Bot','bot');
       this.showSpinner = false;
     }catch(error:any) {
       this.showSpinner = false;

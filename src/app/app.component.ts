@@ -15,11 +15,13 @@ const config = {
 export class AppComponent {
   title = 'Portal';
   toolbarTitle = 'Portal de Atendimento';
+  userLogged = '';
 
   constructor(
     public auth: AuthService,
     private router: Router
     ) {
+      this.userLogged = localStorage.getItem('nickname') ?? '';
       // firebase.initializeApp(config);
     }
 

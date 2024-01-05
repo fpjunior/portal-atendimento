@@ -8,9 +8,15 @@
     color: purple;
 }
 
-.bot {    
-    font-weight: bold; 
+.bot {
+    font-weight: bold;
     color: darkgreen;
+}
+
+.btn-enviar {
+  background-color: #1976D2; /* Cor de fundo desejada */
+  color: #ffffff; /* Cor do texto desejada */
+  height: 55px; /* Altura desejada */
 }
 
 .frame-box{

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // Import FormBuilder, FormGroup, and Validators
 import { AuthService } from '../../services/auth/auth.service'; // Import AuthService
 import { Router } from '@angular/router';
-import { ChatService } from './service/login.service';
+import { LoginService } from './service/login.service';
 
 
 @Component({
@@ -21,7 +21,7 @@ export class LoginPageComponent {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private chatService: ChatService
+    private chatService: LoginService
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],

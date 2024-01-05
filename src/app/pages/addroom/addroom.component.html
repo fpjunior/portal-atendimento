@@ -1,4 +1,4 @@
-<div class="container">
+<!-- <div class="container">
   <form class="example-form" [formGroup]="roomForm" (ngSubmit)="onFormSubmit(roomForm.value)">
       <h2>Please enter new Room</h2>
       <mat-form-field class="example-full-width">
@@ -13,5 +13,23 @@
           <button type="submit" [disabled]="!roomForm.valid" mat-fab color="primary"><mat-icon>save</mat-icon></button>
       </div>
   </form>
+</div>
+ -->
+
+<!-- Seu componente HTML -->
+<div style="height: 795px;" class="example-container mat-elevation-z8">
+  <mat-drawer mode="side" opened class="left-drawer">
+    <div class="users-pane">
+      <mat-card (click)="teste(user)" class="users-card" *ngFor="let user of users">
+        <div style="display: flex;
+        justify-content: space-between;
+        align-items: center;">
+          <mat-icon>person</mat-icon>
+          <span class="username">{{ user.nickname }}</span>
+          <div class="status-indicator" [ngClass]="getStatusClass(user.status)"></div>
+        </div>
+      </mat-card>
+    </div>
+  </mat-drawer>
 </div>
 

@@ -4,6 +4,7 @@ import { AppComponent } from '../app.component';
 import { DatePipe } from '@angular/common';
 import { getDatabase, ref, push, set, query, orderByChild, equalTo, onValue } from 'firebase/database';
 import { snapshotToArray } from '../util/functions-export';
+import { ChatService } from '../pages/chatroom/service/chat.service';
 
 @Component({
   selector: 'app-header',
@@ -18,14 +19,27 @@ export class HeaderComponent implements OnInit {
   displayedColumns: string[] = ['roomname'];
   rooms = [];
   isLoadingResults = true;
+  users: any = [];
 
   constructor(
     private router: Router,
-    private appComponent: AppComponent,
+    private chatService: ChatService,
     public datepipe: DatePipe ) {}
 
   ngOnInit(): void {
     this.checkLoginStatus();
+    this.getOnlineUsers();
+  }
+
+  private getOnlineUsers() {
+    this.chatService.getOnlineUsers().subscribe(
+      (data: any) => {
+        this.users = Object.values(data || []).filter((user: any) => user.status === 'online');
+      },
+      (error: any) => {
+        console.error('Error fetching online users:', error);
+      }
+    );
   }
 
   login(): void {
@@ -51,7 +65,7 @@ export class HeaderComponent implements OnInit {
     const chat = { roomname: '', nickname: '', message: '', date: '', type: '' };
     chat.roomname = roomname;
     chat.nickname = this.nickname;
-    chat.date = this.datepipe.transform(new Date(), 'dd/MM/yyyy HH:mm:ss') ?? '';
+    chat.date = this.datepipe.transform(new Date(), 'dd/MM/yyyy HH:mm:ss', 'pt') ?? '';
     chat.message = `${this.nickname} enter the room`;
     chat.type = 'join';
 

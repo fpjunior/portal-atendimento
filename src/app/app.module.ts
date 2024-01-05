@@ -63,7 +63,7 @@ const auth = getAuth(app);
     RegisterPageComponent,
     HeaderComponent,
     ChatroomComponent,
-    AddroomComponent
+    AddroomComponent,
   ],
   imports: [
     RouterModule,
