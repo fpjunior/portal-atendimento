@@ -35,6 +35,8 @@
                       <input matInput formControlName="attendantName" [disabled]="isLoading" />
                     </mat-form-field>
                   </div>
+                  <mat-label style="color: red; font-style: italic;">{{ msgError }}</mat-label>
+                  <mat-error> {{msgError}} </mat-error>
 
                   <mat-divider></mat-divider>
                   <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">Login</button>

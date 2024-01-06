@@ -18,6 +18,7 @@ export class LoginPageComponent  implements OnInit {
   isValidCodeAttendant: boolean = false;
   public emailPassInvalid = false; // Flag to show an error message if the user enters the wrong email or password
   public isLoading = false; // Flag to show a spinner while the user is logging in
+  msgError: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -82,7 +83,7 @@ export class LoginPageComponent  implements OnInit {
    * @param password
    */
   private userAuth(email: string, password: string) {
-    if(this.isValidCodeAttendant){
+
       this.authService.login(email, password)
         .then((user) => {
 
@@ -93,6 +94,9 @@ export class LoginPageComponent  implements OnInit {
         })
         .catch((error) => {
           // Check if the user entered the wrong password or the user does not exist
+          if (error.code === 'auth/invalid-credential') {
+            this.msgError = 'Credencial Invalida'
+          }
           if ((error.code === 'auth/wrong-password') || (error.code === 'auth/user-not-found')) {
 
             // Reset the password field
@@ -105,7 +109,7 @@ export class LoginPageComponent  implements OnInit {
             this.isLoading = false;
           }
         });
-    }
+
   }
 
   /**
