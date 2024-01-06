@@ -21,6 +21,21 @@
                           <span>Incorrect email or password</span>
                       </mat-error>
                   </mat-form-field>
+
+                  <mat-checkbox formControlName="isAttendant">Atendente</mat-checkbox>
+
+                  <div *ngIf="loginForm.get('isAttendant')?.value">
+                    <mat-form-field appearance="fill">
+                      <mat-label>Code</mat-label>
+                      <input matInput formControlName="attendantCode" [disabled]="isLoading" />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill">
+                      <mat-label>Attendant Name</mat-label>
+                      <input matInput formControlName="attendantName" [disabled]="isLoading" />
+                    </mat-form-field>
+                  </div>
+
                   <mat-divider></mat-divider>
                   <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">Login</button>
                   <a>Don't have an account?<a mat-button routerLink="/register">Register</a></a>

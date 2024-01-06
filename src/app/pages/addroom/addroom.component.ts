@@ -39,7 +39,7 @@ export class AddroomComponent implements OnInit {
               }
 
   ngOnInit(): void {
-    this.getOnlineUsers();
+    // this.getOnlineUsers();
     this.roomForm = this.formBuilder.group({
       'roomname' : [null, Validators.required]
     });
@@ -54,16 +54,16 @@ export class AddroomComponent implements OnInit {
     return status === 'online' ? 'online' : 'offline';
   }
 
-  private getOnlineUsers() {
-    this.chatService.getOnlineUsers().subscribe(
-      (data: any) => {
-        this.users = Object.values(data || []).filter((user: any) => user.status === 'online');
-      },
-      (error: any) => {
-        console.error('Error fetching online users:', error);
-      }
-    );
-  }
+  // private getOnlineUsers() {
+  //   this.chatService.getOnlineUsers().subscribe(
+  //     (data: any) => {
+  //       this.users = Object.values(data || []).filter((user: any) => user.status === 'online');
+  //     },
+  //     (error: any) => {
+  //       console.error('Error fetching online users:', error);
+  //     }
+  //   );
+  // }
 
   onFormSubmit(form: any) {
     const room = form;

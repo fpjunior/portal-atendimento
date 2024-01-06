@@ -15,10 +15,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDividerModule}  from '@angular/material/divider';
+import { MatDividerModule } from '@angular/material/divider';
 
-import {MatStepperModule} from '@angular/material/stepper';
-import {MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 // Import Angular Material modules
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -31,12 +31,13 @@ import { RegisterPageComponent } from './pages/register-page/register-page.compo
 import { getAuth } from 'firebase/auth';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 import { ChatroomComponent } from './pages/chatroom/chatroom.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { AddroomComponent } from './pages/addroom/addroom.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpClientModule } from '@angular/common/http';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 const config = {
   apiKey: "AIzaSyAULJTS4sToIBUzTd55xHTCpGJ3L-jCcog",
@@ -88,6 +89,7 @@ const auth = getAuth(app);
     MatSidenavModule,
     MatSnackBarModule,
     HttpClientModule,
+    MatCheckboxModule,
     provideFirestore(() => getFirestore()),
   ],
   providers: [DatePipe],
