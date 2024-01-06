@@ -106,8 +106,8 @@ export class LoginPageComponent  implements OnInit {
             this.emailPassInvalid = true;
 
             // Hide the spinner
-            this.isLoading = false;
           }
+          this.isLoading = false;
         });
 
   }
