@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from './services/auth/auth.service';
 import { Router } from '@angular/router';
+import { CommunicationService } from './services/auth/comunication.service';
 
 const config = {
   apiKey: 'AIzaSyAULJTS4sToIBUzTd55xHTCpGJ3L-jCcog',
@@ -19,9 +20,13 @@ export class AppComponent {
 
   constructor(
     public auth: AuthService,
-    private router: Router
+    private router: Router,
+    private communicationService: CommunicationService
     ) {
-      this.userLogged = localStorage.getItem('nickname') ?? '';
+      localStorage.setItem('nickname', 'Usuário');
+      communicationService.changeNameUser.subscribe((user: any) => {
+        this.userLogged = localStorage.getItem('nickname') ?? '';
+      });
       // firebase.initializeApp(config);
     }
 
@@ -32,6 +37,7 @@ export class AppComponent {
   logout(): void {
     this.auth.logout()
       .then(() => {
+        localStorage.setItem('nickname', 'Usuário');
         // handle successful logout, e.g., navigate to the login page
         this.router.navigate(['/login']);
       })

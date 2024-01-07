@@ -6,6 +6,7 @@ import { Injectable, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 })
 export class CommunicationService {
   userClicked = new EventEmitter<any>();
+  changeNameUser = new EventEmitter<any>();
   scrool = new EventEmitter<any>();
 
   @ViewChild('chatcontent') chatcontent!: ElementRef;
@@ -14,6 +15,10 @@ export class CommunicationService {
 
   emitUserClick(user: any): void {
     this.userClicked.emit(user);
+  }
+
+  emitUserName(user: any): void {
+    this.changeNameUser.emit(user);
   }
 
   changeScrol(){
