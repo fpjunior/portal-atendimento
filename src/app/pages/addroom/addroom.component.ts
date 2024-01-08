@@ -3,9 +3,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DataSnapshot, child, equalTo, get, getDatabase, orderByChild, push, query, ref, set } from 'firebase/database';
+import { DataSnapshot, child, equalTo, get, getDatabase, onValue, orderByChild, push, query, ref, set } from 'firebase/database';
 import { ChatService } from '../chatroom/service/chat.service';
 import { CommunicationService } from 'src/app/services/auth/comunication.service';
+import { snapshotToArray } from 'src/app/util/functions-export';
 // import * as firebase from 'firebase';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -39,7 +40,7 @@ export class AddroomComponent implements OnInit {
               }
 
   ngOnInit(): void {
-    // this.getOnlineUsers();
+    this.getOnlineUsers();
     this.roomForm = this.formBuilder.group({
       'roomname' : [null, Validators.required]
     });
@@ -52,6 +53,27 @@ export class AddroomComponent implements OnInit {
 
   getStatusClass(status: string): string {
     return status === 'online' ? 'online' : 'offline';
+  }
+
+  private getOnlineUsers() {
+
+    const chatRef = ref(this.database, 'roomusers/')
+    onValue(chatRef, (snapshot) => {
+      const newChats = snapshot.val();
+      if (newChats) {
+        this.users = snapshotToArray(newChats);
+      }
+    },
+    )
+
+    // this.chatService.getOnlineUsers().subscribe(
+    //   (data: any) => {
+    //     this.users = Object.values(data || []).filter((user: any) => user.status === 'online');
+    //   },
+    //   (error: any) => {
+    //     console.error('Error fetching online users:', error);
+    //   }
+    // );
   }
 
   // private getOnlineUsers() {

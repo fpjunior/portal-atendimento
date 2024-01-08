@@ -1,12 +1,12 @@
-import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, OnDestroy, NgZone } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 // import * as firebase from 'firebase';
 import { DatePipe } from '@angular/common';
-import { equalTo, getDatabase, onValue, orderByChild, push, query, ref, set, update } from "firebase/database";
+import { child, equalTo, get, getDatabase, onValue, orderByChild, push, query, ref, set, update } from "firebase/database";
 import { ChatService } from './service/chat.service';
-import { Subscription } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import { snapshotToArray } from 'src/app/util/functions-export';
 import { CommunicationService } from 'src/app/services/auth/comunication.service';
 
@@ -42,40 +42,69 @@ export class ChatroomComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private communicationService: CommunicationService,
+    private zone: NgZone,
     public datepipe: DatePipe) {
     this.nickname = localStorage.getItem('nickname') ?? '';
     const database = getDatabase();
     this.roomname = 'atendente-room';
-    this.getOnlineUsers()
+    // Adiciona um ouvinte para alterações no nó 'chats/'
+    const chatRef = ref(database, 'chats/');
+
+    onValue(chatRef, (snapshot) => {
+      const newChats = snapshot.val();
+      if (newChats) {
+        this.chats = snapshotToArray(newChats);
+        setTimeout(() => this.scrolltop = this.chatcontent.nativeElement.scrollHeight, 500);
+      }
+    }, (error) => {
+      console.error(error);
+    });
+
+    // firebase.database().ref('chats/').on('value', resp => {
+    //   this.chats = [];
+    //   this.chats = snapshotToArray(resp);
+    //   setTimeout(() => this.scrolltop = this.chatcontent.nativeElement.scrollHeight, 500);
+    // });
   }
 
+  ngOnInit(): void {
+    this.getOnlineUsers()
+    // this.listenToChats();
+    this.chatForm = this.formBuilder.group({
+      'message': [null, Validators.required]
+    });
+  }
+
+
   private getOnlineUsers() {
-    this.chatService.getOnlineUsers().subscribe(
-      (data: any) => {
-        this.users = Object.values(data || []).filter((user: any) => user.status === 'online');
-      },
-      (error: any) => {
-        console.error('Error fetching online users:', error);
+    const chatRef = ref(this.database, 'roomusers/')
+    onValue(chatRef, (snapshot) => {
+      const newChats = snapshot.val();
+      if (newChats) {
+        this.users = snapshotToArray(newChats).filter((user: any) => user.status === 'online');
       }
-    );
+    },
+    )
   }
 
   handleUserClick(user: any): void {
      this.scrolltop = this.chatcontent.nativeElement.scrollHeight
   }
 
-  private listenToChats() {
-    this.chatsSubscription = this.chatService.getChats().subscribe(
-      (chats) => {
-        this.chats = snapshotToArray(chats);
-        this.chats = chats;
-        setTimeout(() => this.scrolltop = this.chatcontent.nativeElement.scrollHeight, 500);
-      },
-      (error) => {
-        console.error('Erro ao obter mensagens:', error);
-      }
-    );
-  }
+  // private listenToChats() {
+  //   const chatRef = ref(this.database, 'chats/')
+  //       // Adiciona um ouvinte para alterações no nó 'chats/'
+  //       onValue(chatRef, (snapshot) => {
+  //         const newChats = snapshot.val();
+  //         if (newChats) {
+  //           // Atualize sua variável this.chats com os novos dados
+  //           this.chats = snapshotToArray(snapshot);
+  //           // Execute a lógica adicional, como a atualização da interface do usuário
+  //           setTimeout(() => this.scrolltop = this.chatcontent.nativeElement.scrollHeight, 500);
+  //         }
+  //       },
+  //       )
+  // }
 
   ngOnDestroy() {
     if (this.chatsSubscription) {
@@ -83,36 +112,30 @@ export class ChatroomComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit(): void {
-    this.listenToChats();
-    this.chatForm = this.formBuilder.group({
-      'message': [null, Validators.required]
-    });
-  }
+
 
   onFormSubmit(form: any) {
-
     const chat = {
       roomname: this.roomname,
-      nickname: this.nickname,
+      nickname: localStorage.getItem('nickname'),
       date: this.datepipe.transform(new Date(), 'dd/MM/yyyy HH:mm:ss'),
       type: 'message',
       message: form.message
     };
-
-    this.chatService.sendMessage(chat).subscribe(
-      (response) => {
-        console.log('Mensagem enviada com sucesso:', response);
-        this.listenToChats()
-      },
-      (error) => {
-        console.error('Erro ao enviar mensagem:', error);
-      }
-    );
+    const roomsRef = ref(this.database, 'chats/');
+    const roomRef = child(roomsRef, chat.roomname);
+    get(roomRef).then((snapshot: any) => {
+      const newRoomRef = push(roomsRef);
+      set(newRoomRef, chat);
+      // this.router.navigate(['/roomlist']);
+    });
 
     this.chatForm = this.formBuilder.group({
       'message': [null, Validators.required]
     });
+
+    return of({ success: true });
+
   }
 
   exitChat() {

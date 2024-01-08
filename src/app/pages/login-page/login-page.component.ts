@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { LoginService } from './service/login.service';
 import { ChatService } from '../chatroom/service/chat.service';
 import { CommunicationService } from 'src/app/services/auth/comunication.service';
+import { child, equalTo, get, getDatabase, onValue, orderByChild, push, query, ref, set } from 'firebase/database';
+import { snapshotToArray } from 'src/app/util/functions-export';
 
 
 @Component({
@@ -12,7 +14,7 @@ import { CommunicationService } from 'src/app/services/auth/comunication.service
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss']
 })
-export class LoginPageComponent  implements OnInit {
+export class LoginPageComponent implements OnInit {
   // Declare a FormGroup variable
   loginForm: FormGroup;
   users: any = [];
@@ -21,6 +23,7 @@ export class LoginPageComponent  implements OnInit {
   public emailPassInvalid = false; // Flag to show an error message if the user enters the wrong email or password
   public isLoading = false; // Flag to show a spinner while the user is logging in
   msgError: string = '';
+  database = getDatabase();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -45,15 +48,28 @@ export class LoginPageComponent  implements OnInit {
   }
 
   private getOnlineUsers() {
-    this.chatService.getOnlineUsers().subscribe(
-      (data: any) => {
-        this.users = Object.values(data || []).filter((user: any) => user.status === 'online');
-      },
-      (error: any) => {
-        console.error('Error fetching online users:', error);
+
+    const chatRef = ref(this.database, 'roomusers/')
+    onValue(chatRef, (snapshot) => {
+      const newChats = snapshot.val();
+      if (newChats) {
+        this.users = snapshotToArray(newChats).filter((user: any) => user.status === 'online');;
       }
-    );
+    },
+    )
   }
+  // private getOnlineUsers() {
+
+
+  //   this.chatService.getOnlineUsers().subscribe(
+  //     (data: any) => {
+  //       this.users = Object.values(data || []).filter((user: any) => user.status === 'online');
+  //     },
+  //     (error: any) => {
+  //       console.error('Error fetching online users:', error);
+  //     }
+  //   );
+  // }
 
   // onFormSubmit(form: any): void {
   //   this.chatService.login(form).subscribe(
@@ -72,31 +88,56 @@ export class LoginPageComponent  implements OnInit {
 
   // Adicione outras funções do componente conforme necessário
 
+  /**
+   * Essa função verifica se o usuário é atendente
+   */
   private isAtendente() {
     if (this.loginForm.controls['attendantCode'].value === '000000') {
       localStorage.setItem('nickname', this.loginForm.controls['attendantName'].value)
       this.isValidCodeAttendant = true;
     } else {
       localStorage.setItem('nickname', this.userNameModified)
-      this.loginForm.setErrors({ error: 'Invalid'});
+      this.loginForm.setErrors({ error: 'Invalid' });
       alert('codigo de atendente inválido')
     }
   }
 
   /**
-   * Method to authent a user with the specified username and password
+   * Essa função é complemento da função userAuth, ela salva um usuário no banco caso ele não exista
+   */
+  saveUser(userName: any) {
+    const db = getDatabase();
+    const usersRef = ref(db, '/users');
+    const usersQuery = query(usersRef, orderByChild('nickname'), equalTo(userName));
+
+    const roomsRef = ref(this.database, '/users');
+    // const roomRef = child(roomsRef, chat.roomname);
+    get(usersQuery).then((snapshot: any) => {
+      if (snapshot.exists()) {
+        localStorage.setItem('nickname', userName);
+      } else {
+        const newUserRef = push(usersRef);
+        set(newUserRef, {nickname: userName});
+        localStorage.setItem('nickname', userName);
+      }
+    });
+  }
+
+  /**
+   * Essa função realiza a autenticação do usuário a partir do email e senha
    * @param email
    * @param password
    */
   private userAuth(email: string, password: string) {
-    if(this.isValidCodeAttendant || this.loginForm.valid){
+    if (this.isValidCodeAttendant || this.loginForm.valid) {
       this.authService.login(email, password)
         .then((user) => {
           // Hide the spinner
 
-          if(!this.isValidCodeAttendant){
+          if (!this.isValidCodeAttendant) {
             localStorage.setItem('nickname', this.loginForm.controls['attendantName'].value)
           }
+          this.saveUser(this.userNameModified)
           this.isLoading = false;
           this.router.navigate(['/header']);
 
@@ -124,7 +165,7 @@ export class LoginPageComponent  implements OnInit {
   }
 
   /**
-   * Method to submit the login form
+   * Essa função trata os dados do form do login
    */
   submitLoginForm(): void {
     if (this.loginForm.valid) {
@@ -141,14 +182,13 @@ export class LoginPageComponent  implements OnInit {
       } else {
         localStorage.setItem('nickname', this.userNameModified)
         // Call the login method from AuthService
-
       }
-      if(this.isValidCodeAttendant){
+      if (this.isValidCodeAttendant) {
         localStorage.setItem('nickname', this.loginForm.controls['attendantName'].value)
       }
       this.userAuth(email, password);
       this.communicationService.emitUserName(email);
-    } // End of submitLoginForm()
+    }
   }
 
 
