@@ -89,6 +89,7 @@ export class LoginPageComponent  implements OnInit {
    * @param password
    */
   private userAuth(email: string, password: string) {
+    this.isLoading = false;
     if(this.isValidCodeAttendant || this.loginForm.valid){
       this.authService.login(email, password)
         .then((user) => {
@@ -97,7 +98,7 @@ export class LoginPageComponent  implements OnInit {
           if(!this.isValidCodeAttendant){
             localStorage.setItem('nickname', this.loginForm.controls['attendantName'].value)
           }
-          this.isLoading = false;
+
           this.router.navigate(['/header']);
 
         })
