@@ -95,7 +95,7 @@ export class LoginPageComponent  implements OnInit {
         .catch((error) => {
           // Check if the user entered the wrong password or the user does not exist
           if (error.code === 'auth/invalid-credential') {
-            this.msgError = 'Credencial Invalida'
+            this.msgError = 'Usuário não cadastrado'
           }
           if ((error.code === 'auth/wrong-password') || (error.code === 'auth/user-not-found')) {
 
