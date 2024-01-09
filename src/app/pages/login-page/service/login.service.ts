@@ -19,7 +19,7 @@ export class LoginService {
         const userExists = Object.values(data).some((user: any) => user.nickname === login.nickname);
 
         if (userExists) {
-          localStorage.setItem('nickname', login.nickname);
+          localStorage.setItem('nickNameUser', login.nickname);
           return of({ success: true });
         } else {
           const newUserUrl = `${URL_DEFAULT}/users.json`;

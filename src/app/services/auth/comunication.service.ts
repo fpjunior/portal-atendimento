@@ -11,6 +11,7 @@ export class CommunicationService {
 
   @ViewChild('chatcontent') chatcontent!: ElementRef;
   scrolltop: number = 0;
+  nomeAtendente: string = '';
 
 
   emitUserClick(user: any): void {
@@ -18,6 +19,12 @@ export class CommunicationService {
   }
 
   emitUserName(user: any): void {
+    if(localStorage.getItem('nickNameAtendente')){
+      this.nomeAtendente = localStorage.getItem('nickNameAtendente') ?? '';
+      user = localStorage.getItem('nickNameAtendente')
+    } else {
+      user = localStorage.getItem('nickNameUser')
+    }
     this.changeNameUser.emit(user);
   }
 

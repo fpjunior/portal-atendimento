@@ -5,8 +5,9 @@ import { Router } from '@angular/router';
 import { LoginService } from './service/login.service';
 import { ChatService } from '../chatroom/service/chat.service';
 import { CommunicationService } from 'src/app/services/auth/comunication.service';
-import { child, equalTo, get, getDatabase, onValue, orderByChild, push, query, ref, set } from 'firebase/database';
+import { child, equalTo, get, getDatabase, onValue, orderByChild, push, query, ref, set, update } from 'firebase/database';
 import { snapshotToArray } from 'src/app/util/functions-export';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -18,7 +19,8 @@ export class LoginPageComponent implements OnInit {
   // Declare a FormGroup variable
   loginForm: FormGroup;
   users: any = [];
-  userNameModified: string = 'User';
+  nickNameUser: string = 'User';
+  nickNameAtendente: string = 'Atendente';
   isValidCodeAttendant: boolean = false;
   public emailPassInvalid = false; // Flag to show an error message if the user enters the wrong email or password
   public isLoading = false; // Flag to show a spinner while the user is logging in
@@ -30,7 +32,8 @@ export class LoginPageComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private chatService: ChatService,
-    private communicationService: CommunicationService
+    private communicationService: CommunicationService,
+    public datepipe: DatePipe,
   ) {
     this.communicationService.emitUserName('Usuário');
     this.loginForm = this.formBuilder.group({
@@ -58,48 +61,64 @@ export class LoginPageComponent implements OnInit {
     },
     )
   }
-  // private getOnlineUsers() {
-
-
-  //   this.chatService.getOnlineUsers().subscribe(
-  //     (data: any) => {
-  //       this.users = Object.values(data || []).filter((user: any) => user.status === 'online');
-  //     },
-  //     (error: any) => {
-  //       console.error('Error fetching online users:', error);
-  //     }
-  //   );
-  // }
-
-  // onFormSubmit(form: any): void {
-  //   this.chatService.login(form).subscribe(
-  //     (response: any) => {
-  //       if (response.success) {
-  //         this.router.navigate(['/header']);
-  //       } else {
-  //         // Lógica de tratamento adicional, se necessário
-  //       }
-  //     },
-  //     (error) => {
-  //       // Lógica de tratamento de erro, se necessário
-  //     }
-  //   );
-  // }
-
-  // Adicione outras funções do componente conforme necessário
 
   /**
    * Essa função verifica se o usuário é atendente
    */
   private isAtendente() {
     if (this.loginForm.controls['attendantCode'].value === '000000') {
-      localStorage.setItem('nickname', this.loginForm.controls['attendantName'].value)
+      localStorage.setItem('nickNameAtendente', this.nickNameAtendente)
       this.isValidCodeAttendant = true;
     } else {
-      localStorage.setItem('nickname', this.userNameModified)
+      localStorage.setItem('nickNameUser', this.nickNameUser)
       this.loginForm.setErrors({ error: 'Invalid' });
       alert('codigo de atendente inválido')
     }
+  }
+
+  updateStatusUser(objForm: any) {
+    const chat = { roomname: '', nickname: '', message: '', date: '', type: '' };
+    chat.roomname = 'atendente-room';
+    chat.nickname = this.nickNameUser;
+    chat.date = this.datepipe.transform(new Date(), 'dd/MM/yyyy HH:mm:ss') ?? '';
+    chat.message = `${this.nickNameUser} enter the room`;
+    chat.type = 'join';
+
+    const roomsRefChat = ref(this.database, 'chats/');
+    const roomRefChat = child(roomsRefChat, chat.roomname);
+
+    get(roomRefChat).then((snapshot: any) => {
+      const newRoomRef = push(roomsRefChat);
+      set(newRoomRef, chat);
+    });
+
+    const roomUsersRef = ref(this.database, 'roomusers/');
+    const usersQuery = query(roomUsersRef, orderByChild('nickname'), equalTo(chat.roomname));
+
+    get(usersQuery).then((snapshot) => {
+      const roomUsers = snapshotToArray(snapshot);
+      const user = roomUsers.find(x => x.nickname === this.nickNameUser);
+
+      if (user !== undefined) {
+        const userRef = ref(this.database, `roomusers/${user.key}`);
+        update(userRef, { status: 'online' });
+      } else {
+        const newRoomUser = push(roomUsersRef);
+        const newRoomUserKey = newRoomUser.key;
+
+        const newRoomUserUpdate: any = {};
+        newRoomUserUpdate[`${newRoomUserKey}/roomname`] = chat.roomname;
+        newRoomUserUpdate[`${newRoomUserKey}/nickname`] = this.nickNameUser;
+        newRoomUserUpdate[`${newRoomUserKey}/status`] = 'online';
+
+        const userRef = ref(this.database, `roomusers/${user.key}`);
+        update(userRef, newRoomUserUpdate);
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+
+    // this.router.navigate(['/chatroom', roomname]);
   }
 
   /**
@@ -110,15 +129,14 @@ export class LoginPageComponent implements OnInit {
     const usersRef = ref(db, '/users');
     const usersQuery = query(usersRef, orderByChild('nickname'), equalTo(userName));
 
-    const roomsRef = ref(this.database, '/users');
     // const roomRef = child(roomsRef, chat.roomname);
     get(usersQuery).then((snapshot: any) => {
       if (snapshot.exists()) {
-        localStorage.setItem('nickname', userName);
+        localStorage.setItem('nickNameUser', userName);
       } else {
         const newUserRef = push(usersRef);
         set(newUserRef, {nickname: userName});
-        localStorage.setItem('nickname', userName);
+        localStorage.setItem('nickNameUser', userName);
       }
     });
   }
@@ -133,17 +151,14 @@ export class LoginPageComponent implements OnInit {
       this.authService.login(email, password)
         .then((user) => {
           // Hide the spinner
-
-          if (!this.isValidCodeAttendant) {
-            localStorage.setItem('nickname', this.loginForm.controls['attendantName'].value)
-          }
-          this.saveUser(this.userNameModified)
+          this.saveUser(this.nickNameUser)
+          this.updateStatusUser(this.loginForm)
           this.isLoading = false;
           this.router.navigate(['/header']);
 
         })
         .catch((error) => {
-          localStorage.setItem('nickname', 'Usuário')
+          localStorage.setItem('nickNameUser', 'Usuário')
           // Check if the user entered the wrong password or the user does not exist
           if (error.code === 'auth/invalid-credential') {
             this.msgError = 'Credencial Invalida'
@@ -156,8 +171,8 @@ export class LoginPageComponent implements OnInit {
             // Show an error message
             this.emailPassInvalid = true;
 
-            // Hide the spinner
           }
+          this.isLoading = false;
 
         });
 
@@ -176,16 +191,17 @@ export class LoginPageComponent implements OnInit {
       // Get the email and password from the login form
       const email = this.loginForm.get('email')?.value;
       const password = this.loginForm.get('password')?.value;
-      this.userNameModified = email.split('@')[0]
+      this.nickNameUser = email.split('@')[0]
       if (this.loginForm.controls['isAttendant'].value) {
+        this.nickNameAtendente = this.loginForm.controls['attendantName'].value
         this.isAtendente();
       } else {
-        localStorage.setItem('nickname', this.userNameModified)
+        localStorage.setItem('nickNameUser', this.nickNameUser)
         // Call the login method from AuthService
       }
-      if (this.isValidCodeAttendant) {
-        localStorage.setItem('nickname', this.loginForm.controls['attendantName'].value)
-      }
+      // if (this.isValidCodeAttendant) {
+      //   localStorage.setItem('nickname', this.loginForm.controls['attendantName'].value)
+      // }
       this.userAuth(email, password);
       this.communicationService.emitUserName(email);
     }

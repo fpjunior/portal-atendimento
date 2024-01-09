@@ -30,9 +30,9 @@ export class AppComponent {
     public datepipe: DatePipe,
     private communicationService: CommunicationService
     ) {
-      localStorage.setItem('nickname', 'Usuário');
+      localStorage.setItem('nickNameUser', 'Usuário');
       communicationService.changeNameUser.subscribe((user: any) => {
-        this.userLogged = localStorage.getItem('nickname') ?? '';
+        this.userLogged = localStorage.getItem('nickNameUser') ?? '';
       });
       // firebase.initializeApp(config);
     }
@@ -45,7 +45,7 @@ export class AppComponent {
   exitChat() {
     const chat: any = { roomname: '', nickname: '', message: '', date: '', type: '' };
     chat.roomname = 'atendente'
-    chat.nickname = 'fpsjunior87';
+    chat.nickname = localStorage.getItem('nickNameUser') || localStorage.getItem('nickNameAtendente');
     chat.date = this.datepipe.transform(new Date(), 'dd/MM/yyyy HH:mm:ss');
     chat.message = `${chat.nickname} deixou a conversa`;
     chat.type = 'exit';
@@ -84,7 +84,7 @@ export class AppComponent {
     this.auth.logout()
       .then(() => {
         this.exitChat()
-        localStorage.setItem('nickname', 'Usuário');
+        localStorage.setItem('nickNameUser', 'Usuário');
         // handle successful logout, e.g., navigate to the login page
         this.router.navigate(['/login']);
       })

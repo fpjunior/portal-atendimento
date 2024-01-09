@@ -44,7 +44,7 @@ export class ChatroomComponent implements OnInit, OnDestroy {
     private communicationService: CommunicationService,
     private zone: NgZone,
     public datepipe: DatePipe) {
-    this.nickname = localStorage.getItem('nickname') ?? '';
+    this.nickname = localStorage.getItem('nickNameUser') ?? 'Usuário';
     const database = getDatabase();
     this.roomname = 'atendente-room';
     // Adiciona um ouvinte para alterações no nó 'chats/'
@@ -117,7 +117,7 @@ export class ChatroomComponent implements OnInit, OnDestroy {
   onFormSubmit(form: any) {
     const chat = {
       roomname: this.roomname,
-      nickname: localStorage.getItem('nickname'),
+      nickname: localStorage.getItem('nickNameUser'),
       date: this.datepipe.transform(new Date(), 'dd/MM/yyyy HH:mm:ss'),
       type: 'message',
       message: form.message
