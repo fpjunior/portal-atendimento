@@ -26,6 +26,7 @@ export class LoginPageComponent implements OnInit {
   public isLoading = false; // Flag to show a spinner while the user is logging in
   msgError: string = '';
   database = getDatabase();
+  codinval: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -72,7 +73,7 @@ export class LoginPageComponent implements OnInit {
     } else {
       localStorage.setItem('nickNameUser', this.nickNameUser)
       this.loginForm.setErrors({ error: 'Invalid' });
-      alert('codigo de atendente inválido')
+      this.codinval = ('Código inválido')
     }
   }
 
