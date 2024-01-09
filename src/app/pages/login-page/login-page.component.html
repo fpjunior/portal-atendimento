@@ -2,23 +2,23 @@
   <mat-card>
       <mat-card-content>
           <form class="form-container" [formGroup]="loginForm" (ngSubmit)="submitLoginForm()">
-                  <h1>Login</h1>
+                  <h1>Logar</h1>
                   <mat-form-field appearance="fill">
                       <mat-label>Email</mat-label>
                       <input matInput formControlName="email" type="email" required [disabled]="isLoading"/>
                       <mat-error *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-                          <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</span>
-                          <span *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email.</span>
+                          <span *ngIf="loginForm.get('email')?.errors?.['required']">Email é obrigatório.</span>
+                          <span *ngIf="loginForm.get('email')?.errors?.['email']">Por favor, entre com um email válido.</span>
                       </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="fill">
-                      <mat-label>Password</mat-label>
+                      <mat-label>Senha</mat-label>
                       <input matInput formControlName="password" type="password" required [disabled]="isLoading"/>
                       <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
                           <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</span>
                       </mat-error>
                       <mat-error *ngIf="emailPassInvalid">
-                          <span>Incorrect email or password</span>
+                          <span>Email ou Senha incorretos</span>
                       </mat-error>
                   </mat-form-field>
 
@@ -26,12 +26,12 @@
 
                   <div *ngIf="loginForm.get('isAttendant')?.value">
                     <mat-form-field appearance="fill">
-                      <mat-label>Code</mat-label>
+                      <mat-label>Código</mat-label>
                       <input matInput formControlName="attendantCode" [disabled]="isLoading" />
                     </mat-form-field>
 
                     <mat-form-field appearance="fill">
-                      <mat-label>Attendant Name</mat-label>
+                      <mat-label>Nome do Atendente</mat-label>
                       <input matInput formControlName="attendantName" [disabled]="isLoading" />
                     </mat-form-field>
                   </div>
