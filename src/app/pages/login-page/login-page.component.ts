@@ -45,7 +45,6 @@ export class LoginPageComponent implements OnInit {
     });
   }
 
-
   ngOnInit(): void {
     this.getOnlineUsers();
   }
@@ -121,6 +120,56 @@ export class LoginPageComponent implements OnInit {
     // this.router.navigate(['/chatroom', roomname]);
   }
 
+  enterChatRoom(roomname: string) {
+    const chat = {
+      roomname: '',
+      nickname: '',
+      message: '',
+      date: '',
+      type: ''
+    };
+
+    chat.roomname = roomname;
+    chat.nickname = this.nickNameUser;
+    chat.date = this.datepipe.transform(new Date(), 'dd/MM/yyyy HH:mm:ss') ?? '';
+    chat.message = `${this.nickNameUser} enter the room`;
+    chat.type = 'join';
+
+    const db = getDatabase();
+
+    // Add new chat message
+    const chatsRef = ref(db, 'chats/');
+    const newMessageRef = push(chatsRef);
+    update(newMessageRef, chat);
+
+    // Update roomusers
+    const roomusersRef = ref(db, 'roomusers/');
+
+    const roomusers = query(roomusersRef, orderByChild('roomname'), equalTo('atendente-room'));
+
+    get(roomusers).then((snapshot) => {
+      if (snapshot.exists()) {
+        snapshot.forEach((userSnapshot) => {
+          const user = userSnapshot.val();
+          if (user.nickname === chat.nickname) {
+            const userRef = ref(db, `roomusers/${userSnapshot.key}`);
+            update(userRef, { status: 'online' });
+          } else {
+            const newroomuser = { roomname: '', nickname: '', status: '' };
+            newroomuser.roomname = roomname;
+            newroomuser.nickname = this.nickNameUser;
+            newroomuser.status = 'online';
+
+            const newRoomUserRef = push(roomusersRef);
+            update(newRoomUserRef, newroomuser);
+          }
+        });
+      }
+    });
+
+  }
+
+
   /**
    * Essa função é complemento da função userAuth, ela salva um usuário no banco caso ele não exista
    */
@@ -128,7 +177,6 @@ export class LoginPageComponent implements OnInit {
     const db = getDatabase();
     const usersRef = ref(db, '/users');
     const usersQuery = query(usersRef, orderByChild('nickname'), equalTo(userName));
-
     // const roomRef = child(roomsRef, chat.roomname);
     get(usersQuery).then((snapshot: any) => {
       if (snapshot.exists()) {
@@ -137,6 +185,8 @@ export class LoginPageComponent implements OnInit {
         const newUserRef = push(usersRef);
         set(newUserRef, {nickname: userName});
         localStorage.setItem('nickNameUser', userName);
+        this.updateStatusUser(this.loginForm)
+
       }
     });
   }
@@ -152,7 +202,7 @@ export class LoginPageComponent implements OnInit {
         .then((user) => {
           // Hide the spinner
           this.saveUser(this.nickNameUser)
-          this.updateStatusUser(this.loginForm)
+          this.enterChatRoom('atendente-room')
           this.isLoading = false;
           this.router.navigate(['/header']);
 

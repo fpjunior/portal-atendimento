@@ -43,47 +43,39 @@ export class AppComponent {
 
 
   exitChat() {
-    const chat: any = { roomname: '', nickname: '', message: '', date: '', type: '' };
-    chat.roomname = 'atendente'
-    chat.nickname = localStorage.getItem('nickNameUser') || localStorage.getItem('nickNameAtendente');
-    chat.date = this.datepipe.transform(new Date(), 'dd/MM/yyyy HH:mm:ss');
-    chat.message = `${chat.nickname} deixou a conversa`;
+    const chat = { roomname: '', nickname: '', message: '', date: '', type: '' };
+    chat.roomname = 'atendente-room';
+    chat.nickname = this.userLogged;
+    chat.date = this.datepipe.transform(new Date(), 'dd/MM/yyyy HH:mm:ss') ?? '';
+    chat.message = `${this.userLogged} leave the room`;
     chat.type = 'exit';
 
     const db = getDatabase();
-    const roomUsersRef = ref(db, 'roomusers/');
+    const chatsRef = ref(db, 'chats/');
+    const newMessageRef = push(chatsRef);
+    update(newMessageRef, chat);
 
-    // Cria uma consulta para encontrar o usuário pelo nome do quarto e apelido
-    const roomUsersQuery = query(roomUsersRef, orderByChild('roomname'), equalTo(chat.roomname));
+    const roomusersRef = ref(db, 'roomusers/');
+    const roomusersQuery = query(roomusersRef, orderByChild('roomname'), equalTo('atendente-room'));
 
-    // Adiciona um listener para escutar as alterações na consulta
-    onValue(roomUsersQuery, (snapshot: any) => {
-      const roomusers = snapshot.val();
-
-      // Verifica se encontrou usuários no quarto
-      if (roomusers) {
-        const users = Object.values(roomusers);
-
-        // Encontra o usuário pelo apelido
-        const user: any = users.find((x: any) => x.nickname === chat.nickname);
-
-        // Verifica se encontrou o usuário
-        if (user) {
-          // Atualiza o status para 'offline'
-          const userRef = ref(db, `roomusers/${user.key}`);
-          update(userRef, { status: 'offline' });
-        }
+    get(roomusersQuery).then((snapshot) => {
+      if (snapshot.exists()) {
+        snapshot.forEach((userSnapshot) => {
+          const user = userSnapshot.val();
+          if (user.nickname === chat.nickname) {
+            const userRef = ref(db, `roomusers/${userSnapshot.key}`);
+            update(userRef, { status: 'offline' });
+          }
+        });
       }
     });
-
-    return of({ success: true });
-
   }
 
+
   logout(): void {
+    this.exitChat()
     this.auth.logout()
       .then(() => {
-        this.exitChat()
         localStorage.setItem('nickNameUser', 'Usuário');
         // handle successful logout, e.g., navigate to the login page
         this.router.navigate(['/login']);

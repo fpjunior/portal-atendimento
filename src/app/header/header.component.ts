@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponent } from '../app.component';
 import { DatePipe } from '@angular/common';
-import { getDatabase, ref, push, set, query, orderByChild, equalTo, onValue } from 'firebase/database';
+import { getDatabase, ref, push, set, query, orderByChild, equalTo, onValue, update } from 'firebase/database';
 import { snapshotToArray } from '../util/functions-export';
 import { ChatService } from '../pages/chatroom/service/chat.service';
 import { CommunicationService } from '../services/auth/comunication.service';
@@ -28,14 +28,18 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private chatService: ChatService,
     public datepipe: DatePipe,
-    private communicationService: CommunicationService ) {
-      // communicationService.userClicked.subscribe((user: any) => {
-      //   this.ativarChatRoomTab()
-      // });
-    }
+    private communicationService: CommunicationService) {
+    // communicationService.userClicked.subscribe((user: any) => {
+    //   this.ativarChatRoomTab()
+    // });
+  }
+
+
 
   ngOnInit(): void {
     // this.checkLoginStatus();
+    // this.enterChatRoom('atendente-room');
+
     this.getOnlineUsers();
   }
 
