@@ -26,6 +26,7 @@ export class LoginPageComponent implements OnInit {
   public isLoading = false; // Flag to show a spinner while the user is logging in
   msgError: string = '';
   database = getDatabase();
+  siteKey: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -43,6 +44,7 @@ export class LoginPageComponent implements OnInit {
       attendantCode: [''],
       attendantName: [''],
     });
+    this.siteKey = '6LdQzmIpAAAAAMedGqQalB_SvrR-Ey47-yX-pLla'
   }
 
   ngOnInit(): void {
@@ -183,7 +185,7 @@ export class LoginPageComponent implements OnInit {
         localStorage.setItem('nickNameUser', userName);
       } else {
         const newUserRef = push(usersRef);
-        set(newUserRef, {nickname: userName});
+        set(newUserRef, { nickname: userName });
         localStorage.setItem('nickNameUser', userName);
         this.updateStatusUser(this.loginForm)
 
@@ -224,7 +226,7 @@ export class LoginPageComponent implements OnInit {
           }
           this.isLoading = false;
         });
-      }
+    }
   }
 
   /**
@@ -255,5 +257,19 @@ export class LoginPageComponent implements OnInit {
     }
   }
 
+  handleReset() {
 
   }
+
+  handleExpire() {
+
+  }
+
+  handleLoad() {
+
+  }
+
+  handleSuccess(token: String) {
+    console.log(token)
+  }
+}

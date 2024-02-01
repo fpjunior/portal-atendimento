@@ -1,49 +1,54 @@
 <div class="center-container">
   <mat-card>
-      <mat-card-content>
-          <form class="form-container" [formGroup]="loginForm" (ngSubmit)="submitLoginForm()">
-                  <h1>Logar</h1>
-                  <mat-form-field appearance="fill">
-                      <mat-label>Email</mat-label>
-                      <input matInput formControlName="email" type="email" required [disabled]="isLoading"/>
-                      <mat-error *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-                          <span *ngIf="loginForm.get('email')?.errors?.['required']">Email é obrigatório.</span>
-                          <span *ngIf="loginForm.get('email')?.errors?.['email']">Por favor, entre com um email válido.</span>
-                      </mat-error>
-                  </mat-form-field>
-                  <mat-form-field appearance="fill">
-                      <mat-label>Senha</mat-label>
-                      <input matInput formControlName="password" type="password" required [disabled]="isLoading"/>
-                      <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-                          <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</span>
-                      </mat-error>
-                      <mat-error *ngIf="emailPassInvalid">
-                          <span>Email ou Senha incorretos</span>
-                      </mat-error>
-                  </mat-form-field>
+    <mat-card-content>
+      <form class="form-container" [formGroup]="loginForm" (ngSubmit)="submitLoginForm()">
+        <h1>Logar</h1>
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" required [disabled]="isLoading" />
+          <mat-error *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+            <span *ngIf="loginForm.get('email')?.errors?.['required']">Email é obrigatório.</span>
+            <span *ngIf="loginForm.get('email')?.errors?.['email']">Por favor, entre com um email válido.</span>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Senha</mat-label>
+          <input matInput formControlName="password" type="password" required [disabled]="isLoading" />
+          <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</span>
+          </mat-error>
+          <mat-error *ngIf="emailPassInvalid">
+            <span>Email ou Senha incorretos</span>
+          </mat-error>
+        </mat-form-field>
 
-                  <mat-checkbox formControlName="isAttendant">Atendente</mat-checkbox>
+        <mat-checkbox formControlName="isAttendant">Atendente</mat-checkbox>
 
-                  <div *ngIf="loginForm.get('isAttendant')?.value">
-                    <mat-form-field appearance="fill">
-                      <mat-label>Código</mat-label>
-                      <input matInput formControlName="attendantCode" [disabled]="isLoading" />
-                    </mat-form-field>
+        <div *ngIf="loginForm.get('isAttendant')?.value">
+          <mat-form-field appearance="fill">
+            <mat-label>Código</mat-label>
+            <input matInput formControlName="attendantCode" [disabled]="isLoading" />
+          </mat-form-field>
 
-                    <mat-form-field appearance="fill">
-                      <mat-label>Nome do Atendente</mat-label>
-                      <input matInput formControlName="attendantName" [disabled]="isLoading" />
-                    </mat-form-field>
-                  </div>
-                  <mat-error> {{msgError}} </mat-error>
+          <mat-form-field appearance="fill">
+            <mat-label>Nome do Atendente</mat-label>
+            <input matInput formControlName="attendantName" [disabled]="isLoading" />
+          </mat-form-field>
+        </div>
+        <mat-error> {{msgError}} </mat-error>
 
-                  <mat-divider></mat-divider>
-                  <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">Login</button>
-                  <a>Não tem uma conta?<a mat-button routerLink="/register">Registrar</a></a>
-          </form>
-      </mat-card-content>
-      <mat-card-footer>
-          <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
-      </mat-card-footer>
+        <mat-divider></mat-divider>
+        <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">Login</button>
+        <a>Não tem uma conta?<a mat-button routerLink="/register">Registrar</a></a>
+
+        <ngx-recaptcha2 #captchaElem [siteKey]="siteKey" (reset)="handleReset()" (expire)="handleExpire()"
+          (load)="handleLoad()" (success)="handleSuccess($event)" [useGlobalDomain]="false" formControlName="recaptcha">
+        </ngx-recaptcha2>
+
+      </form>
+    </mat-card-content>
+    <mat-card-footer>
+      <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+    </mat-card-footer>
   </mat-card>
 </div>

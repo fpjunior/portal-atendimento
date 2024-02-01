@@ -38,6 +38,7 @@ import { AddroomComponent } from './pages/addroom/addroom.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpClientModule } from '@angular/common/http';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { NgxCaptchaModule } from 'ngx-captcha';
 
 const config = {
   apiKey: "AIzaSyAULJTS4sToIBUzTd55xHTCpGJ3L-jCcog",
@@ -90,6 +91,7 @@ const auth = getAuth(app);
     MatSnackBarModule,
     HttpClientModule,
     MatCheckboxModule,
+    NgxCaptchaModule,
     provideFirestore(() => getFirestore()),
   ],
   providers: [DatePipe],
